@@ -10,8 +10,8 @@
     <div class="container">
         <h1 class="mt-4">Rock, Paper, Scissors</h1>
         <hr>
-        <button class="btn btn-outline-warning">Save</button>
-        <button class="btn btn-outline-danger">Reset</button>
+        <button class="btn btn-outline-warning" onclick="save()">Save</button>
+        <button class="btn btn-outline-danger" onclick="reset()">Reset</button>
         <hr>
 
         <p id="stats_won">&nbsp;</p>
@@ -21,21 +21,41 @@
         <hr>
         <p>Click one of the following buttons to indicate your draw:</p>
 
-        <button class="btn btn-outline-success">Rock</button>
-        <button class="btn btn-outline-success">Paper</button>
-        <button class="btn btn-outline-success">Scissors</button>
-        <button class="btn btn-outline-success">Lizard</button>
-        <button class="btn btn-outline-success">Spock</button>
+        <button class="btn btn-outline-success" onclick="choose(1)">Rock</button>
+        <button class="btn btn-outline-success" onclick="choose(2)">Paper</button>
+        <button class="btn btn-outline-success" onclick="choose(3)">Scissors</button>
+        <button class="btn btn-outline-success" onclick="choose(4)">Lizard</button>
+        <button class="btn btn-outline-success" onclick="choose(5)">Spock</button>
 
         <br>
         <hr>
 
         <p id="player_choice">&nbsp;</p>
-        <p id="computer_choich">&nbsp;</p>
-        <p id="round_result">&nbsp;</p>
+        <p id="computer_choice">&nbsp;</p>
+        <p class="text-danger" id="round_result">&nbsp;</p>
 
         <hr>
 
     </div>
 </body>
+<script>
+    function choose(x) {
+        fetch("/play?c=" + x)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("player_choice").innerHTML = data.player_choice;
+            document.getElementById("computer_choice").innerHTML = data.computer_choice;
+            document.getElementById("round_result").innerHTML = data.result;
+        })
+       
+    }
+
+    function save() {
+        fetch("/save")
+    }
+
+    function reset() {
+        fetch("/reset")
+    }
+</script>
 </html>

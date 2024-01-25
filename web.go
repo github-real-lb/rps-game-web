@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"text/template"
 )
 
@@ -28,13 +29,20 @@ func renderTemplate(w http.ResponseWriter, page string) {
 }
 
 func play(w http.ResponseWriter, r *http.Request) {
-	result := PlayRound(&p, 1)
-	out, err := json.MarshalIndent(result, "", "   ")
-	if err != nil {
-		log.Println(err)
+	playerChoice, err := strconv.Atoi(r.URL.Query().Get("c"))
+
+	if err != nil || playerChoice < 1 || playerChoice > 5 {
+		log.Println("Expected integer paramater between 1 to 5 in URL, but recieved c=", r.URL.Query().Get("c"))
+	} else {
+		result := PlayRound(&p, playerChoice)
+		out, err := json.MarshalIndent(result, "", "   ")
+		if err != nil {
+			log.Println(err)
+		} else {
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(out)
+		}
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(out)
 }
 
 func save(w http.ResponseWriter, r *http.Request) {
@@ -47,4 +55,5 @@ func save(w http.ResponseWriter, r *http.Request) {
 
 func reset(w http.ResponseWriter, r *http.Request) {
 	p.ResetStats()
+	log.Println("Reseting stats.")
 }
