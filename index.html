@@ -17,7 +17,14 @@
         <button class="btn btn-outline-success" onclick="choose(3)">Scissors</button>
         <button class="btn btn-outline-success" onclick="choose(4)">Lizard</button>
         <button class="btn btn-outline-success" onclick="choose(5)">Spock</button>
-        <br>    
+        <br>
+        <br>   
+        <p>
+        <span id="player_choice">&nbsp;</span><br>
+        <span id="computer_choice">&nbsp;</span>
+        </p>
+        <p class="" id="round_result">&nbsp;</p>
+ 
         <hr>
 
         <p>
@@ -32,14 +39,6 @@
         <hr>
 
         <button class="btn btn-outline-danger" onclick="reset()">Reset Stats</button>
-        <hr>
-
-        <p id="player_choice">&nbsp;</p>
-        <p id="computer_choice">&nbsp;</p>
-        <p class="text-danger" id="round_result">&nbsp;</p>
-
-        <hr>
-
     </div>
 </body>
 <script>
@@ -75,7 +74,23 @@
         .then(data => {
             document.getElementById("player_choice").innerHTML = data.player_choice;
             document.getElementById("computer_choice").innerHTML = data.computer_choice;
-            document.getElementById("round_result").innerHTML = data.result;
+            switch (data.result) {
+                case "You've won!":
+                    document.getElementById("round_result").className = "badge bg-success-subtle text-success-emphasis rounded-pill"
+                    document.getElementById("round_result").innerHTML = data.result;
+                    break;
+                case "You've lost!":
+                    document.getElementById("round_result").className = "badge bg-danger-subtle text-danger-emphasis rounded-pill"
+                    document.getElementById("round_result").innerHTML = data.result;
+                    break;
+                case "It's a draw!":
+                    document.getElementById("round_result").className = "badge bg-warning-subtle text-warning-emphasis rounded-pill"
+                    document.getElementById("round_result").innerHTML = data.result;
+                    break;
+                default:
+                    break;
+            }
+            
         })
 
         updateStats()

@@ -47,7 +47,7 @@ func PlayRound(p *Player, playerDraw int) Round {
 
 	if playerDraw == computerDraw {
 		p.Stats.Draw++
-		r.Result = "It's a draw."
+		r.Result = "It's a draw!"
 	} else if didPlayerWon(playerDraw, computerDraw) {
 		p.Stats.Won++
 		r.Result = "You've won!"
