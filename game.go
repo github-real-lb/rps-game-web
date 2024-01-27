@@ -19,15 +19,15 @@ var RPS = map[int]string{
 }
 
 // stats is a struct to record player's stat during the game.
-type stats struct {
-	won  int
-	lost int
-	draw int
+type Stats struct {
+	Won  int `json:"stats_won"`
+	Lost int `json:"stats_lost"`
+	Draw int `json:"stats_draw"`
 }
 
 type Player struct {
 	Name  string
-	Stats stats
+	Stats Stats
 }
 
 type Round struct {
@@ -36,7 +36,8 @@ type Round struct {
 	Result         string `json:"result"`
 }
 
-// PlayRound receives player's draw (between 1 to 5), then gets computer's draw and prompts who won.
+// PlayRound receives player's draw (between 1 to 5)
+// It returns Round type of round results.
 func PlayRound(p *Player, playerDraw int) Round {
 	computerDraw := getComputerDraw()
 
@@ -45,13 +46,13 @@ func PlayRound(p *Player, playerDraw int) Round {
 	r.ComputerChoice = fmt.Sprintf("Computer chose %v.", RPS[computerDraw])
 
 	if playerDraw == computerDraw {
-		p.Stats.draw++
+		p.Stats.Draw++
 		r.Result = "It's a draw."
 	} else if didPlayerWon(playerDraw, computerDraw) {
-		p.Stats.won++
+		p.Stats.Won++
 		r.Result = "You've won!"
 	} else {
-		p.Stats.lost++
+		p.Stats.Lost++
 		r.Result = "You've lost!"
 	}
 
@@ -85,33 +86,21 @@ func didPlayerWon(playerDraw, computerDraw int) bool {
 	}
 }
 
-// ShowStats display the player's statistics of wins, loses and draws.
-func (p *Player) ShowStats() {
-	t := p.Stats.won + p.Stats.lost + p.Stats.draw
-
-	fmt.Println()
-	fmt.Println()
-	fmt.Println("Your Stats are:")
-	fmt.Printf("You've won %d times (%.1f%%).\n", p.Stats.won, float64(p.Stats.won)/float64(t)*100)
-	fmt.Printf("You've lost %d times (%.1f%%).\n", p.Stats.lost, float64(p.Stats.lost)/float64(t)*100)
-	fmt.Printf("You've draw %d times (%.1f%%).\n", p.Stats.draw, float64(p.Stats.draw)/float64(t)*100)
-}
-
 // ResetStats reset player's stats to 0.
 func (p *Player) ResetStats() {
-	p.Stats = stats{0, 0, 0}
+	p.Stats = Stats{0, 0, 0}
 }
 
 // SaveToFile save the players stats to a file.
 func (p *Player) SaveToFile(fileName string) error {
-	str := fmt.Sprintf("%d,%d,%d", p.Stats.won, p.Stats.lost, p.Stats.draw)
+	str := fmt.Sprintf("%d,%d,%d", p.Stats.Won, p.Stats.Lost, p.Stats.Draw)
 	err := os.WriteFile(fileName, []byte(str), 0666)
 	return err
 }
 
 // LoadFromFile loads the players stats from a file.
 func (p *Player) LoadFromFile(fileName string) error {
-	p.Stats = stats{0, 0, 0}
+	p.Stats = Stats{0, 0, 0}
 	bs, err := os.ReadFile(fileName)
 
 	if err != nil {
@@ -124,15 +113,15 @@ func (p *Player) LoadFromFile(fileName string) error {
 		return errors.New("file isn't in the correct format")
 	}
 
-	if p.Stats.won, err = strconv.Atoi(ss[0]); err != nil {
+	if p.Stats.Won, err = strconv.Atoi(ss[0]); err != nil {
 		return errors.New("file isn't in the correct format")
 	}
 
-	if p.Stats.lost, err = strconv.Atoi(ss[1]); err != nil {
+	if p.Stats.Lost, err = strconv.Atoi(ss[1]); err != nil {
 		return errors.New("file isn't in the correct format")
 	}
 
-	if p.Stats.draw, err = strconv.Atoi(ss[2]); err != nil {
+	if p.Stats.Draw, err = strconv.Atoi(ss[2]); err != nil {
 		return errors.New("file isn't in the correct format")
 	}
 

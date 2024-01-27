@@ -22,10 +22,10 @@ func main() {
 		}
 	}()
 
-	http.HandleFunc("/save", save)
-	http.HandleFunc("/reset", reset)
-	http.HandleFunc("/play", play)
 	http.HandleFunc("/", homePage)
+	http.HandleFunc("/load_stats", loadStat)
+	http.HandleFunc("/play", play)
+	http.HandleFunc("/reset", reset)
 
 	log.Println("Starting web server on port 8080")
 	http.ListenAndServe(":8080", nil)

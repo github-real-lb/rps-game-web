@@ -28,6 +28,16 @@ func renderTemplate(w http.ResponseWriter, page string) {
 	}
 }
 
+func loadStat(w http.ResponseWriter, r *http.Request) {
+	out, err := json.MarshalIndent(p.Stats, "", "   ")
+	if err != nil {
+		log.Println(err)
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(out)
+	}
+}
+
 func play(w http.ResponseWriter, r *http.Request) {
 	playerChoice, err := strconv.Atoi(r.URL.Query().Get("c"))
 
@@ -41,19 +51,19 @@ func play(w http.ResponseWriter, r *http.Request) {
 		} else {
 			w.Header().Set("Content-Type", "application/json")
 			w.Write(out)
-		}
-	}
-}
 
-func save(w http.ResponseWriter, r *http.Request) {
-	if err := p.SaveToFile(statsFileName); err == nil {
-		log.Println("Saving stats to file: Success.")
-	} else {
-		log.Println("Saving stats to file: Failure.", err)
+			if err := p.SaveToFile(statsFileName); err != nil {
+				log.Println(err)
+			}
+		}
 	}
 }
 
 func reset(w http.ResponseWriter, r *http.Request) {
 	p.ResetStats()
 	log.Println("Reseting stats.")
+
+	if err := p.SaveToFile(statsFileName); err != nil {
+		log.Println(err)
+	}
 }

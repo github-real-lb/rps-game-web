@@ -75,16 +75,16 @@ func TestSaveToFileAndLoadFromFile(t *testing.T) {
 
 	os.Remove("_statstesting.txt")
 	var pSave = Player{
-		Stats: stats{123, 456, 789},
+		Stats: Stats{123, 456, 789},
 	}
 	var pLoad = Player{
-		Stats: stats{0, 0, 0},
+		Stats: Stats{0, 0, 0},
 	}
 
 	pSave.SaveToFile("_statstesting.txt")
 	pLoad.LoadFromFile("_statstesting.txt")
 
-	if pSave.Stats.won != pLoad.Stats.won || pSave.Stats.lost != pLoad.Stats.lost || pSave.Stats.draw != pLoad.Stats.draw {
+	if pSave.Stats.Won != pLoad.Stats.Won || pSave.Stats.Lost != pLoad.Stats.Lost || pSave.Stats.Draw != pLoad.Stats.Draw {
 		t.Error("Expected to load the same stats that were saved to file.")
 	}
 	os.Remove("_statstesting.txt")
